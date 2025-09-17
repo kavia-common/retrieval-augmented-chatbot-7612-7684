@@ -1,0 +1,4 @@
+{
+    "command": "npm install",
+    "working_directory": "/home/kavia/workspace/code-generation/retrieval-augmented-chatbot-7612-7684/frontend_web"
+}
