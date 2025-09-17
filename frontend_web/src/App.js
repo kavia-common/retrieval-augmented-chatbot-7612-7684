@@ -1,48 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import ChatPage from './components/ChatPage';
+import Navbar from './components/Navbar';
+import { ApiProvider } from './services/ApiContext';
 
 // PUBLIC_INTERFACE
 function App() {
+  /**
+   * App hosts theme management and provides API client context to the app.
+   * It renders a Navbar and the ChatPage (chat UI).
+   */
   const [theme, setTheme] = useState('light');
 
-  // Effect to apply theme to document element
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
   // PUBLIC_INTERFACE
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
+  const apiBaseUrl = useMemo(() => {
+    // Use env variable if provided; fallback to relative path for same-origin proxy
+    // Note: Set REACT_APP_BACKEND_URL in .env to point to your backend server.
+    return process.env.REACT_APP_BACKEND_URL || '';
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApiProvider baseUrl={apiBaseUrl}>
+      <div className="App">
+        <Navbar theme={theme} onToggleTheme={toggleTheme} />
+        <ChatPage />
+      </div>
+    </ApiProvider>
   );
 }
 

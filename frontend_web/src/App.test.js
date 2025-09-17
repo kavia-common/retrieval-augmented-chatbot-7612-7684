@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders chat UI', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/Conversation/i)).toBeInTheDocument();
+  expect(screen.getByPlaceholderText(/Ask a question/i)).toBeInTheDocument();
 });
